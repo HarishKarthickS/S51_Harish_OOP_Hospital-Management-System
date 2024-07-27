@@ -1,9 +1,7 @@
 #include <iostream>
 #include <string>
-
 using namespace std;
 
-// Patient class definition
 class Patient {
 private:
     string name;
@@ -11,26 +9,16 @@ private:
     string diagnosis;
 
 public:
-    // Constructor
-    Patient(string n, int i, string d) : name(n), id(i), diagnosis(d) {}
-
-    // Method to set diagnosis
-    void setDiagnosis(string d) {
-        diagnosis = d;
+    Patient(string name, int id, string diagnosis)  {
+        this->name = name;
+        this->id = id;
+        this->diagnosis = diagnosis;
     }
-
-    // Method to get diagnosis
-    string getDiagnosis() {
-        return diagnosis;
-    }
-
-    // Method to display patient information
-    void display() {
-        cout << "Patient ID: " << id << ", Name: " << name << ", Diagnosis: " << diagnosis << endl;
-    }
+    void setDiagnosis(string d) { diagnosis = d; }
+    void display() const { cout << "Patient ID: " << id << ", Name: " << name << ", Diagnosis: " << diagnosis << endl; }
+    string getName() { return this->name; }
 };
 
-// Doctor class definition
 class Doctor {
 private:
     string name;
@@ -38,76 +26,112 @@ private:
     string specialty;
 
 public:
-    // Constructor
-    Doctor(string n, int i, string s) : name(n), id(i), specialty(s) {}
-
-    // Method to set specialty
-    void setSpecialty(string s) {
-        specialty = s;
+    Doctor(string name, int id, string specaility)  {
+        this->name = name;
+        this->id = id;
+        this->specialty = specialty;
     }
-
-    // Method to get specialty
-    string getSpecialty() {
-        return specialty;
-    }
-
-    // Method to display doctor information
-    void display() {
-        cout << "Doctor ID: " << id << ", Name: " << name << ", Specialty: " << specialty << endl;
-    }
-
-    // Method to diagnose a patient
     void diagnosePatient(Patient &p, string diagnosis) {
         p.setDiagnosis(diagnosis);
-        cout << "Doctor " << name << " diagnosed Patient " << p.getDiagnosis() << " with " << diagnosis << endl;
+        cout << "Doctor " << this->name << " diagnosed Patient " << p.getName() << " with " << diagnosis << endl;
+    }
+    void display() const { cout << "Doctor ID: " << id << ", Name: " << name << ", Specialty: " << specialty << endl; }
+};
+
+class Room {
+private:
+    int roomNumber;
+    bool isOccupied;
+    Patient *currentPatient;
+
+public:
+    Room(int num) : roomNumber(num), isOccupied(false), currentPatient(nullptr) {}
+    void admitPatient(Patient &p) {
+        if (!isOccupied) {
+            currentPatient = &p;
+            isOccupied = true;
+            cout << "Patient " << p.getName() << " admitted to room " << roomNumber << endl;
+        } else {
+            cout << "Room " << roomNumber << " is already occupied." << endl;
+        }
+    }
+    void dischargePatient() {
+        if (isOccupied) {
+            cout << "Patient " << currentPatient->getName() << " discharged from room " << roomNumber << endl;
+            currentPatient = nullptr;
+            isOccupied = false;
+        } else {
+            cout << "Room " << roomNumber << " is already empty." << endl;
+        }
+    }
+    void display() const {
+        cout << "Room Number: " << roomNumber << ", Occupied: " << (isOccupied ? "Yes" : "No") << endl;
+        if (isOccupied) {
+            cout << "Current Patient: " << currentPatient->getName() << endl;
+        }
     }
 };
 
-// Main function to simulate hospital management system
 int main() {
     string patientName, doctorName, specialty, diagnosis;
-    int patientId, doctorId;
+    int patientId, doctorId, roomNumber, choice;
 
-    // Get input for patient
     cout << "Enter patient name: ";
     getline(cin, patientName);
     cout << "Enter patient ID: ";
     cin >> patientId;
-    cin.ignore(); // to ignore the newline character left by cin
+    cin.ignore();
     cout << "Enter initial diagnosis: ";
     getline(cin, diagnosis);
-
-    // Create Patient object
     Patient patient1(patientName, patientId, diagnosis);
 
-    // Get input for doctor
     cout << "\nEnter doctor name: ";
     getline(cin, doctorName);
     cout << "Enter doctor ID: ";
     cin >> doctorId;
-    cin.ignore(); // to ignore the newline character left by cin
+    cin.ignore();
     cout << "Enter doctor's specialty: ";
     getline(cin, specialty);
-
-    // Create Doctor object
     Doctor doctor1(doctorName, doctorId, specialty);
 
-    // Display initial data
-    cout << "\nInitial Data:" << endl;
-    patient1.display();
-    doctor1.display();
+    cout << "\nEnter room number: ";
+    cin >> roomNumber;
+    cin.ignore();
+    Room room1(roomNumber);
 
-    // Get new diagnosis input
-    cout << "\nEnter new diagnosis for the patient: ";
-    getline(cin, diagnosis);
+    do {
+        cout << "\n1. Admit Patient\n2. Diagnose Patient\n3. Discharge Patient\n4. Display Patient Info\n5. Display Doctor Info\n6. Display Room Info\n7. Exit\nEnter choice: ";
+        cin >> choice;
+        cin.ignore();
 
-    // Simulating a diagnosis
-    doctor1.diagnosePatient(patient1, diagnosis);
-
-    // Display updated data
-    cout << "\nUpdated Data:" << endl;
-    patient1.display();
-    doctor1.display();
+        switch (choice) {
+            case 1:
+                room1.admitPatient(patient1);
+                break;
+            case 2:
+                cout << "Enter new diagnosis: ";
+                getline(cin, diagnosis);
+                doctor1.diagnosePatient(patient1, diagnosis);
+                break;
+            case 3:
+                room1.dischargePatient();
+                break;
+            case 4:
+                patient1.display();
+                break;
+            case 5:
+                doctor1.display();
+                break;
+            case 6:
+                room1.display();
+                break;
+            case 7:
+                cout << "Exiting the program." << endl;
+                break;
+            default:
+                cout << "Invalid choice. Try again." << endl;
+        }
+    } while (choice != 7);
 
     return 0;
 }
