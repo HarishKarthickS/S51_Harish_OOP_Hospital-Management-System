@@ -79,9 +79,9 @@ public:
 };
 
 int main() {
-    Patient patients[MAX_PATIENTS];
-    Doctor doctors[MAX_DOCTORS];
-    Room rooms[MAX_ROOMS];
+    Patient* patients[MAX_PATIENTS];
+    Doctor* doctors[MAX_DOCTORS];
+    Room* rooms[MAX_ROOMS];
 
     int patientCount = 0, doctorCount = 0, roomCount = 0;
     int choice;
@@ -103,7 +103,7 @@ int main() {
                     cin.ignore();
                     cout << "Enter initial diagnosis: ";
                     getline(cin, diagnosis);
-                    patients[patientCount++] = Patient(name, id, diagnosis);
+                    patients[patientCount++] = new Patient(name, id, diagnosis);
                 } else {
                     cout << "Maximum number of patients reached." << endl;
                 }
@@ -120,7 +120,7 @@ int main() {
                     cin.ignore();
                     cout << "Enter doctor's specialty: ";
                     getline(cin, specialty);
-                    doctors[doctorCount++] = Doctor(name, id, specialty);
+                    doctors[doctorCount++] = new Doctor(name, id, specialty);
                 } else {
                     cout << "Maximum number of doctors reached." << endl;
                 }
@@ -132,7 +132,7 @@ int main() {
                     cout << "Enter room number: ";
                     cin >> number;
                     cin.ignore();
-                    rooms[roomCount++] = Room(number);
+                    rooms[roomCount++] = new Room(number);
                 } else {
                     cout << "Maximum number of rooms reached." << endl;
                 }
@@ -145,7 +145,7 @@ int main() {
                 cout << "Enter room index (0 to " << roomCount - 1 << "): ";
                 cin >> roomIndex;
                 if (patientIndex >= 0 && patientIndex < patientCount && roomIndex >= 0 && roomIndex < roomCount) {
-                    rooms[roomIndex].admitPatient(patients[patientIndex]);
+                    rooms[roomIndex]->admitPatient(*patients[patientIndex]);
                 } else {
                     cout << "Invalid indices." << endl;
                 }
@@ -162,7 +162,7 @@ int main() {
                 if (doctorIndex >= 0 && doctorIndex < doctorCount && patientIndex >= 0 && patientIndex < patientCount) {
                     cout << "Enter new diagnosis: ";
                     getline(cin, diagnosis);
-                    doctors[doctorIndex].diagnosePatient(patients[patientIndex], diagnosis);
+                    doctors[doctorIndex]->diagnosePatient(*patients[patientIndex], diagnosis);
                 } else {
                     cout << "Invalid indices." << endl;
                 }
@@ -173,7 +173,7 @@ int main() {
                 cout << "Enter room index (0 to " << roomCount - 1 << "): ";
                 cin >> roomIndex;
                 if (roomIndex >= 0 && roomIndex < roomCount) {
-                    rooms[roomIndex].dischargePatient();
+                    rooms[roomIndex]->dischargePatient();
                 } else {
                     cout << "Invalid index." << endl;
                 }
@@ -184,7 +184,7 @@ int main() {
                 cout << "Enter patient index (0 to " << patientCount - 1 << "): ";
                 cin >> patientIndex;
                 if (patientIndex >= 0 && patientIndex < patientCount) {
-                    patients[patientIndex].display();
+                    patients[patientIndex]->display();
                 } else {
                     cout << "Invalid index." << endl;
                 }
@@ -195,7 +195,7 @@ int main() {
                 cout << "Enter doctor index (0 to " << doctorCount - 1 << "): ";
                 cin >> doctorIndex;
                 if (doctorIndex >= 0 && doctorIndex < doctorCount) {
-                    doctors[doctorIndex].display();
+                    doctors[doctorIndex]->display();
                 } else {
                     cout << "Invalid index." << endl;
                 }
@@ -206,7 +206,7 @@ int main() {
                 cout << "Enter room index (0 to " << roomCount - 1 << "): ";
                 cin >> roomIndex;
                 if (roomIndex >= 0 && roomIndex < roomCount) {
-                    rooms[roomIndex].display();
+                    rooms[roomIndex]->display();
                 } else {
                     cout << "Invalid index." << endl;
                 }
@@ -219,6 +219,16 @@ int main() {
                 cout << "Invalid choice. Try again." << endl;
         }
     } while (choice != 10);
+
+    for (int i = 0; i < patientCount; ++i) {
+        delete patients[i];
+    }
+    for (int i = 0; i < doctorCount; ++i) {
+        delete doctors[i];
+    }
+    for (int i = 0; i < roomCount; ++i) {
+        delete rooms[i];
+    }
 
     return 0;
 }
