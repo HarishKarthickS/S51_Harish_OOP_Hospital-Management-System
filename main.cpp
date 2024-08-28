@@ -11,12 +11,10 @@ private:
     string name;
     int id;
     string diagnosis;
-    static int totalPatients;
+
 public:
     Patient() : name(""), id(0), diagnosis("") {}
-    Patient(string n, int i, string d) : name(n), id(i), diagnosis(d) {
-        totalPatients++;
-    }
+    Patient(string n, int i, string d) : name(n), id(i), diagnosis(d) {}
 
     void setDiagnosis(string d) { diagnosis = d; }
     void display() const {
@@ -30,12 +28,10 @@ private:
     string name;
     int id;
     string specialty;
-    static int totalDoctors;
+
 public:
     Doctor() : name(""), id(0), specialty("") {}
-    Doctor(string n, int i, string s) : name(n), id(i), specialty(s) {
-        totalDoctors++;
-    }
+    Doctor(string n, int i, string s) : name(n), id(i), specialty(s) {}
 
     void diagnosePatient(Patient &p, string diagnosis) {
         p.setDiagnosis(diagnosis);
