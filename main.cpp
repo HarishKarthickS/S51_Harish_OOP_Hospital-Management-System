@@ -11,10 +11,12 @@ private:
     string name;
     int id;
     string diagnosis;
-
+    static int totalPatients;
 public:
     Patient() : name(""), id(0), diagnosis("") {}
-    Patient(string n, int i, string d) : name(n), id(i), diagnosis(d) {}
+    Patient(string n, int i, string d) : name(n), id(i), diagnosis(d) {
+        totalPatients++;
+    }
 
     void setDiagnosis(string d) { diagnosis = d; }
     void display() const {
@@ -23,15 +25,19 @@ public:
     string getName() { return this->name; }
 };
 
+int Patient::totalPatients = 0;
+
 class Doctor {
 private:
     string name;
     int id;
     string specialty;
-
+    static int totalDoctors;
 public:
     Doctor() : name(""), id(0), specialty("") {}
-    Doctor(string n, int i, string s) : name(n), id(i), specialty(s) {}
+    Doctor(string n, int i, string s) : name(n), id(i), specialty(s) {
+        totalDoctors++;
+    }
 
     void diagnosePatient(Patient &p, string diagnosis) {
         p.setDiagnosis(diagnosis);
@@ -41,6 +47,8 @@ public:
         cout << "Doctor ID: " << id << ", Name: " << name << ", Specialty: " << specialty << endl;
     }
 };
+
+int Doctor::totalDoctors = 0;
 
 class Room {
 private:
@@ -79,6 +87,7 @@ public:
 };
 
 int main() {
+    
     Patient* patients[MAX_PATIENTS];
     Doctor* doctors[MAX_DOCTORS];
     Room* rooms[MAX_ROOMS];
@@ -212,13 +221,14 @@ int main() {
                 }
                 break;
             }
+            
             case 10:
                 cout << "Exiting the program." << endl;
                 break;
             default:
                 cout << "Invalid choice. Try again." << endl;
         }
-    } while (choice != 10);
+    } while (choice != 11);
 
     for (int i = 0; i < patientCount; ++i) {
         delete patients[i];
