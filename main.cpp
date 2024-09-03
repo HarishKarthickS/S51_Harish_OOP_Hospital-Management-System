@@ -17,6 +17,9 @@ public:
     Patient(string n, int i, string d) : name(n), id(i), diagnosis(d) {
         totalPatients++;
     }
+    static void displayTotalPatients() {
+        cout << "Total Patients: " << totalPatients << endl;
+    }
 
     void setDiagnosis(string d) { diagnosis = d; }
     void display() const {
@@ -25,6 +28,7 @@ public:
     string getName() { return this->name; }
 };
 
+// Initialize static member
 int Patient::totalPatients = 0;
 
 class Doctor {
@@ -38,7 +42,9 @@ public:
     Doctor(string n, int i, string s) : name(n), id(i), specialty(s) {
         totalDoctors++;
     }
-
+    static void displayTotalDoctors() {
+        cout << "Total Doctors: " << totalDoctors << endl;
+    }
     void diagnosePatient(Patient &p, string diagnosis) {
         p.setDiagnosis(diagnosis);
         cout << "Doctor " << this->name << " diagnosed Patient " << p.getName() << " with " << diagnosis << endl;
@@ -48,6 +54,7 @@ public:
     }
 };
 
+// Initialize static member
 int Doctor::totalDoctors = 0;
 
 class Room {
@@ -96,7 +103,7 @@ int main() {
     int choice;
 
     do {
-        cout << "\n1. Add Patient\n2. Add Doctor\n3. Add Room\n4. Admit Patient to Room\n5. Diagnose Patient\n6. Discharge Patient from Room\n7. Display Patient Info\n8. Display Doctor Info\n9. Display Room Info\n10. Exit\nEnter choice: ";
+        cout << "\n1. Add Patient\n2. Add Doctor\n3. Add Room\n4. Admit Patient to Room\n5. Diagnose Patient\n6. Discharge Patient from Room\n7. Display Patient Info\n8. Display Doctor Info\n9. Display Room Info\n10. Display Total Patients and Doctors\n11. Exit\nEnter choice: ";
         cin >> choice;
         cin.ignore();
 
@@ -221,8 +228,12 @@ int main() {
                 }
                 break;
             }
-            
-            case 10:
+            case 10: {
+                Patient::displayTotalPatients();
+                Doctor::displayTotalDoctors();
+                break;
+            }
+            case 11:
                 cout << "Exiting the program." << endl;
                 break;
             default:
