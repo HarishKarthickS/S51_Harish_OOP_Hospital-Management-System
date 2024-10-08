@@ -12,20 +12,50 @@ private:
     int id;
     string diagnosis;
     static int totalPatients;
+
 public:
     Patient() : name(""), id(0), diagnosis("") {}
     Patient(string n, int i, string d) : name(n), id(i), diagnosis(d) {
         totalPatients++;
     }
+
+    // Accessor for name
+    string getName() const {
+        return name;
+    }
+
+    // Mutator for name
+    void setName(string n) {
+        name = n;
+    }
+
+    // Accessor for ID
+    int getId() const {
+        return id;
+    }
+
+    // Mutator for ID
+    void setId(int i) {
+        id = i;
+    }
+
+    // Accessor for diagnosis
+    string getDiagnosis() const {
+        return diagnosis;
+    }
+
+    // Mutator for diagnosis
+    void setDiagnosis(string d) {
+        diagnosis = d;
+    }
+
     static void displayTotalPatients() {
         cout << "Total Patients: " << totalPatients << endl;
     }
 
-    void setDiagnosis(string d) { diagnosis = d; }
     void display() const {
         cout << "Patient ID: " << id << ", Name: " << name << ", Diagnosis: " << diagnosis << endl;
     }
-    string getName() { return this->name; }
 };
 
 // Initialize static member
@@ -37,18 +67,52 @@ private:
     int id;
     string specialty;
     static int totalDoctors;
+
 public:
     Doctor() : name(""), id(0), specialty("") {}
     Doctor(string n, int i, string s) : name(n), id(i), specialty(s) {
         totalDoctors++;
     }
+
+    // Accessor for name
+    string getName() const {
+        return name;
+    }
+
+    // Mutator for name
+    void setName(string n) {
+        name = n;
+    }
+
+    // Accessor for ID
+    int getId() const {
+        return id;
+    }
+
+    // Mutator for ID
+    void setId(int i) {
+        id = i;
+    }
+
+    // Accessor for specialty
+    string getSpecialty() const {
+        return specialty;
+    }
+
+    // Mutator for specialty
+    void setSpecialty(string s) {
+        specialty = s;
+    }
+
     static void displayTotalDoctors() {
         cout << "Total Doctors: " << totalDoctors << endl;
     }
+
     void diagnosePatient(Patient &p, string diagnosis) {
-        p.setDiagnosis(diagnosis);
+        p.setDiagnosis(diagnosis);  // Using the mutator to set diagnosis
         cout << "Doctor " << this->name << " diagnosed Patient " << p.getName() << " with " << diagnosis << endl;
     }
+
     void display() const {
         cout << "Doctor ID: " << id << ", Name: " << name << ", Specialty: " << specialty << endl;
     }
@@ -76,6 +140,7 @@ public:
             cout << "Room " << roomNumber << " is already occupied." << endl;
         }
     }
+    
     void dischargePatient() {
         if (isOccupied) {
             cout << "Patient " << currentPatient->getName() << " discharged from room " << roomNumber << endl;
@@ -85,6 +150,7 @@ public:
             cout << "Room " << roomNumber << " is already empty." << endl;
         }
     }
+
     void display() const {
         cout << "Room Number: " << roomNumber << ", Occupied: " << (isOccupied ? "Yes" : "No") << endl;
         if (isOccupied) {
@@ -234,20 +300,21 @@ int main() {
                 break;
             }
             case 11:
-                cout << "Exiting the program." << endl;
+                cout << "Exiting program." << endl;
                 break;
             default:
-                cout << "Invalid choice. Try again." << endl;
+                cout << "Invalid choice." << endl;
         }
     } while (choice != 11);
 
-    for (int i = 0; i < patientCount; ++i) {
+    // Clean up dynamically allocated memory
+    for (int i = 0; i < patientCount; i++) {
         delete patients[i];
     }
-    for (int i = 0; i < doctorCount; ++i) {
+    for (int i = 0; i < doctorCount; i++) {
         delete doctors[i];
     }
-    for (int i = 0; i < roomCount; ++i) {
+    for (int i = 0; i < roomCount; i++) {
         delete rooms[i];
     }
 
