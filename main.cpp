@@ -2,57 +2,43 @@
 #include <string>
 using namespace std;
 
+// Constants for limits
 const int MAX_PATIENTS = 10;
 const int MAX_DOCTORS = 5;
 const int MAX_ROOMS = 5;
 
+// Abstracted Patient class
 class Patient {
 private:
-    string name;
-    int id;
-    string diagnosis;
+    string name;  // Private data member (encapsulation)
+    int id;       // Private data member
+    string diagnosis; // Private data member
     static int totalPatients;
 
 public:
+    // Constructor
     Patient() : name(""), id(0), diagnosis("") {}
+
     Patient(string n, int i, string d) : name(n), id(i), diagnosis(d) {
         totalPatients++;
     }
 
-    // Accessor for name
-    string getName() const {
-        return name;
-    }
+    // Public interface (accessors and mutators) to access the private members
+    string getName() const { return name; }
+    void setName(string n) { name = n; }
 
-    // Mutator for name
-    void setName(string n) {
-        name = n;
-    }
+    int getId() const { return id; }
+    void setId(int i) { id = i; }
 
-    // Accessor for ID
-    int getId() const {
-        return id;
-    }
+    string getDiagnosis() const { return diagnosis; }
+    void setDiagnosis(string d) { diagnosis = d; }
 
-    // Mutator for ID
-    void setId(int i) {
-        id = i;
-    }
-
-    // Accessor for diagnosis
-    string getDiagnosis() const {
-        return diagnosis;
-    }
-
-    // Mutator for diagnosis
-    void setDiagnosis(string d) {
-        diagnosis = d;
-    }
-
+    // Static method to display total number of patients
     static void displayTotalPatients() {
         cout << "Total Patients: " << totalPatients << endl;
     }
 
+    // Public method to display patient information
     void display() const {
         cout << "Patient ID: " << id << ", Name: " << name << ", Diagnosis: " << diagnosis << endl;
     }
@@ -61,58 +47,44 @@ public:
 // Initialize static member
 int Patient::totalPatients = 0;
 
+// Abstracted Doctor class
 class Doctor {
 private:
-    string name;
-    int id;
-    string specialty;
+    string name;    // Private data member (encapsulation)
+    int id;         // Private data member
+    string specialty;  // Private data member
     static int totalDoctors;
 
 public:
+    // Constructor
     Doctor() : name(""), id(0), specialty("") {}
+
     Doctor(string n, int i, string s) : name(n), id(i), specialty(s) {
         totalDoctors++;
     }
 
-    // Accessor for name
-    string getName() const {
-        return name;
-    }
+    // Public interface (accessors and mutators)
+    string getName() const { return name; }
+    void setName(string n) { name = n; }
 
-    // Mutator for name
-    void setName(string n) {
-        name = n;
-    }
+    int getId() const { return id; }
+    void setId(int i) { id = i; }
 
-    // Accessor for ID
-    int getId() const {
-        return id;
-    }
+    string getSpecialty() const { return specialty; }
+    void setSpecialty(string s) { specialty = s; }
 
-    // Mutator for ID
-    void setId(int i) {
-        id = i;
-    }
-
-    // Accessor for specialty
-    string getSpecialty() const {
-        return specialty;
-    }
-
-    // Mutator for specialty
-    void setSpecialty(string s) {
-        specialty = s;
-    }
-
+    // Static method to display total number of doctors
     static void displayTotalDoctors() {
         cout << "Total Doctors: " << totalDoctors << endl;
     }
 
+    // Public method to diagnose a patient
     void diagnosePatient(Patient &p, string diagnosis) {
         p.setDiagnosis(diagnosis);  // Using the mutator to set diagnosis
         cout << "Doctor " << this->name << " diagnosed Patient " << p.getName() << " with " << diagnosis << endl;
     }
 
+    // Public method to display doctor information
     void display() const {
         cout << "Doctor ID: " << id << ", Name: " << name << ", Specialty: " << specialty << endl;
     }
@@ -121,16 +93,19 @@ public:
 // Initialize static member
 int Doctor::totalDoctors = 0;
 
+// Room class to demonstrate encapsulation as well
 class Room {
 private:
-    int roomNumber;
-    bool isOccupied;
-    Patient *currentPatient;
+    int roomNumber;    // Private data member
+    bool isOccupied;   // Private data member
+    Patient *currentPatient; // Pointer to current patient in room
 
 public:
+    // Constructor
     Room() : roomNumber(0), isOccupied(false), currentPatient(nullptr) {}
     Room(int num) : roomNumber(num), isOccupied(false), currentPatient(nullptr) {}
 
+    // Public method to admit a patient
     void admitPatient(Patient &p) {
         if (!isOccupied) {
             currentPatient = &p;
@@ -140,7 +115,8 @@ public:
             cout << "Room " << roomNumber << " is already occupied." << endl;
         }
     }
-    
+
+    // Public method to discharge a patient
     void dischargePatient() {
         if (isOccupied) {
             cout << "Patient " << currentPatient->getName() << " discharged from room " << roomNumber << endl;
@@ -151,6 +127,7 @@ public:
         }
     }
 
+    // Public method to display room info
     void display() const {
         cout << "Room Number: " << roomNumber << ", Occupied: " << (isOccupied ? "Yes" : "No") << endl;
         if (isOccupied) {
@@ -158,7 +135,6 @@ public:
         }
     }
 };
-
 int main() {
     
     Patient* patients[MAX_PATIENTS];
