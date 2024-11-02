@@ -16,39 +16,52 @@ private:
     static int totalPatients;
 
 public:
+    // Default constructor
     Patient() : name(""), id(0), diagnosis("") {}
+
+    // Parameterized constructor
     Patient(string n, int i, string d) : name(n), id(i), diagnosis(d) {
         totalPatients++;
     }
+
+    // Copy constructor
     Patient(const Patient &p) : name(p.name), id(p.id), diagnosis(p.diagnosis) {
         totalPatients++;
         cout << "Copy constructor called for patient " << name << endl;
     }
+
+    // Destructor
     ~Patient() {
         totalPatients--;
         cout << "Destructor called for patient " << name << endl;
     }
 
+    // Accessors and mutators
     string getName() const { return name; }
     void setName(string n) { name = n; }
+
     int getId() const { return id; }
     void setId(int i) { id = i; }
+
     string getDiagnosis() const { return diagnosis; }
     void setDiagnosis(string d) { diagnosis = d; }
 
+    // Static method to display total number of patients
     static void displayTotalPatients() {
         cout << "Total Patients: " << totalPatients << endl;
     }
 
+    // Overloaded display method to show full patient details
     void display() const {
         cout << "Patient ID: " << id << ", Name: " << name << ", Diagnosis: " << diagnosis << endl;
     }
 
+    // Overloaded display method to show specific info (e.g., only the name)
     void display(string info) const {
         if (info == "name") {
             cout << "Patient Name: " << name << endl;
         } else {
-            display();
+            display(); // Fallback to full display if unrecognized info type
         }
     }
 };
@@ -66,27 +79,35 @@ protected:
 
 public:
     Doctor() : name(""), id(0), specialty("") {}
+
     Doctor(string n, int i, string s) : name(n), id(i), specialty(s) {
         totalDoctors++;
     }
+
     virtual ~Doctor() {
         totalDoctors--;
         cout << "Destructor called for doctor " << name << endl;
     }
 
+    // Accessors and mutators
     string getName() const { return name; }
     void setName(string n) { name = n; }
+
     int getId() const { return id; }
     void setId(int i) { id = i; }
+
     string getSpecialty() const { return specialty; }
     void setSpecialty(string s) { specialty = s; }
 
+    // Pure virtual function to make this class abstract
     virtual void display() const = 0;
 
+    // Static method to display total number of doctors
     static void displayTotalDoctors() {
         cout << "Total Doctors: " << totalDoctors << endl;
     }
 
+    // Public method to diagnose a patient
     void diagnosePatient(Patient &p, string diagnosis) {
         p.setDiagnosis(diagnosis);
         cout << "Doctor " << this->name << " diagnosed Patient " << p.getName() << " with " << diagnosis << endl;
@@ -96,7 +117,7 @@ public:
 // Initialize static member
 int Doctor::totalDoctors = 0;
 
-// Demonstrating single inheritance
+// SpecialistDoctor demonstrates single inheritance from Doctor
 class SpecialistDoctor : public Doctor {
 private:
     string subSpecialty;
@@ -110,13 +131,14 @@ public:
     }
 };
 
-// Demonstrating multilevel inheritance
+// SeniorDoctor demonstrates multilevel inheritance from SpecialistDoctor
 class SeniorDoctor : public SpecialistDoctor {
 private:
     int experienceYears;
 
 public:
-    SeniorDoctor(string n, int i, string s, string ss, int years) : SpecialistDoctor(n, i, s, ss), experienceYears(years) {}
+    SeniorDoctor(string n, int i, string s, string ss, int years) 
+        : SpecialistDoctor(n, i, s, ss), experienceYears(years) {}
 
     void display() const override {
         cout << "Senior Doctor ID: " << getId() << ", Name: " << getName() << ", Specialty: " << getSpecialty()
@@ -124,7 +146,7 @@ public:
     }
 };
 
-// Room class
+// Room class demonstrates encapsulation
 class Room {
 private:
     int roomNumber;
@@ -133,7 +155,9 @@ private:
 
 public:
     Room() : roomNumber(0), isOccupied(false), currentPatient(nullptr) {}
+
     Room(int num) : roomNumber(num), isOccupied(false), currentPatient(nullptr) {}
+
     ~Room() {
         cout << "Destructor called for room " << roomNumber << endl;
     }
@@ -168,8 +192,13 @@ public:
 
 int main() {
     Patient p1("John Doe", 101, "Flu");
-    p1.display();
-    p1.display("name");
+
+    // Demonstrating function overloading with display methods
+    cout << "Full Patient Display:" << endl;
+    p1.display(); // Calls display() to show full details
+
+    cout << "\nPartial Patient Display (name only):" << endl;
+    p1.display("name"); // Calls display(string info) to show only the name
 
     Room r1(101);
     r1.admitPatient(p1);
