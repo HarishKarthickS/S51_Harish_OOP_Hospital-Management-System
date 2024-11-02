@@ -7,7 +7,7 @@ const int MAX_PATIENTS = 10;
 const int MAX_DOCTORS = 5;
 const int MAX_ROOMS = 5;
 
-// Abstracted Patient class
+// Patient class demonstrating encapsulation and polymorphism through function overloading
 class Patient {
 private:
     string name;
@@ -22,12 +22,6 @@ public:
     // Parameterized constructor
     Patient(string n, int i, string d) : name(n), id(i), diagnosis(d) {
         totalPatients++;
-    }
-
-    // Copy constructor
-    Patient(const Patient &p) : name(p.name), id(p.id), diagnosis(p.diagnosis) {
-        totalPatients++;
-        cout << "Copy constructor called for patient " << name << endl;
     }
 
     // Destructor
@@ -69,7 +63,7 @@ public:
 // Initialize static member
 int Patient::totalPatients = 0;
 
-// Abstract Doctor class
+// Abstract Doctor class demonstrating inheritance
 class Doctor {
 protected:
     string name;
@@ -146,7 +140,7 @@ public:
     }
 };
 
-// Room class demonstrates encapsulation
+// Room class demonstrating encapsulation and constructor overloading
 class Room {
 private:
     int roomNumber;
@@ -154,8 +148,10 @@ private:
     Patient *currentPatient;
 
 public:
+    // Default constructor
     Room() : roomNumber(0), isOccupied(false), currentPatient(nullptr) {}
 
+    // Parameterized constructor
     Room(int num) : roomNumber(num), isOccupied(false), currentPatient(nullptr) {}
 
     ~Room() {
@@ -200,6 +196,7 @@ int main() {
     cout << "\nPartial Patient Display (name only):" << endl;
     p1.display("name"); // Calls display(string info) to show only the name
 
+    // Demonstrating constructor overloading with Room class
     Room r1(101);
     r1.admitPatient(p1);
     r1.display();
