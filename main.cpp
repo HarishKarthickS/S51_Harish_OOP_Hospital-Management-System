@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <memory>
 using namespace std;
 
 const int MAX_PATIENTS = 10;
@@ -22,7 +23,7 @@ public:
         totalPatients--;
         cout << "Destructor called for patient " << name << endl;
     }
-    
+
     string getName() const { return name; }
     int getId() const { return id; }
     string getDiagnosis() const { return diagnosis; }
@@ -32,20 +33,21 @@ public:
         cout << "Total Patients: " << totalPatients << endl;
     }
 
-    void display() const {
+    virtual void display() const {
         cout << "Patient ID: " << id << ", Name: " << name << ", Diagnosis: " << diagnosis << endl;
-    }
-    
-    void display(string info) const {
-        if (info == "name") {
-            cout << "Patient Name: " << name << endl;
-        } else {
-            display();
-        }
     }
 };
 
 int Patient::totalPatients = 0;
+
+class SimplePatientDisplay : public Patient {
+public:
+    SimplePatientDisplay(string n, int i, string d) : Patient(n, i, d) {}
+
+    void display() const override {
+        cout << "Patient Name: " << getName() << endl;
+    }
+};
 
 class Doctor {
 protected:
@@ -104,7 +106,6 @@ public:
     }
 };
 
-// DiagnosisManager class handles diagnosis setting for patients
 class DiagnosisManager {
 public:
     static void diagnosePatient(Patient &p, const Doctor &d, string diagnosis) {
@@ -113,7 +114,15 @@ public:
     }
 };
 
-class Room {
+class RoomInterface {
+public:
+    virtual void admitPatient(Patient &p) = 0;
+    virtual void dischargePatient() = 0;
+    virtual void display() const = 0;
+    virtual ~RoomInterface() = default;
+};
+
+class Room : public RoomInterface {
 private:
     int roomNumber;
     bool isOccupied;
@@ -127,7 +136,7 @@ public:
         cout << "Destructor called for room " << roomNumber << endl;
     }
 
-    void admitPatient(Patient &p) {
+    void admitPatient(Patient &p) override {
         if (!isOccupied) {
             currentPatient = &p;
             isOccupied = true;
@@ -137,7 +146,7 @@ public:
         }
     }
 
-    void dischargePatient() {
+    void dischargePatient() override {
         if (isOccupied) {
             cout << "Patient " << currentPatient->getName() << " discharged from room " << roomNumber << endl;
             currentPatient = nullptr;
@@ -147,7 +156,7 @@ public:
         }
     }
 
-    void display() const {
+    void display() const override {
         cout << "Room Number: " << roomNumber << ", Occupied: " << (isOccupied ? "Yes" : "No") << endl;
         if (isOccupied) {
             cout << "Current Patient: " << currentPatient->getName() << endl;
@@ -157,12 +166,13 @@ public:
 
 int main() {
     Patient p1("John Doe", 101, "Flu");
+    SimplePatientDisplay sp1("Jane Doe", 102, "Cold");
 
     cout << "Full Patient Display:" << endl;
     p1.display();
 
-    cout << "\nPartial Patient Display (name only):" << endl;
-    p1.display("name");
+    cout << "\nSimple Patient Display (name only):" << endl;
+    sp1.display();
 
     Room r1(101);
     r1.admitPatient(p1);
