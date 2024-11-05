@@ -7,6 +7,7 @@ const int MAX_PATIENTS = 10;
 const int MAX_DOCTORS = 5;
 const int MAX_ROOMS = 5;
 
+// Base Patient class
 class Patient {
 private:
     string name;
@@ -19,7 +20,7 @@ public:
     Patient(string n, int i, string d) : name(n), id(i), diagnosis(d) {
         totalPatients++;
     }
-    ~Patient() {
+    virtual ~Patient() {
         totalPatients--;
         cout << "Destructor called for patient " << name << endl;
     }
@@ -33,6 +34,7 @@ public:
         cout << "Total Patients: " << totalPatients << endl;
     }
 
+    // Base display method that can be overridden
     virtual void display() const {
         cout << "Patient ID: " << id << ", Name: " << name << ", Diagnosis: " << diagnosis << endl;
     }
@@ -40,15 +42,18 @@ public:
 
 int Patient::totalPatients = 0;
 
+// Derived Patient class that can be substituted for Patient
 class SimplePatientDisplay : public Patient {
 public:
     SimplePatientDisplay(string n, int i, string d) : Patient(n, i, d) {}
 
+    // Override display to show only the name
     void display() const override {
         cout << "Patient Name: " << getName() << endl;
     }
 };
 
+// Abstract Doctor class
 class Doctor {
 protected:
     string name;
@@ -70,6 +75,7 @@ public:
     int getId() const { return id; }
     string getSpecialty() const { return specialty; }
 
+    // Base display method that all subclasses must implement
     virtual void display() const = 0;
 
     static void displayTotalDoctors() {
@@ -79,6 +85,7 @@ public:
 
 int Doctor::totalDoctors = 0;
 
+// Derived class SpecialistDoctor, fully substitutable for Doctor
 class SpecialistDoctor : public Doctor {
 private:
     string subSpecialty;
@@ -92,6 +99,7 @@ public:
     }
 };
 
+// Derived class SeniorDoctor, fully substitutable for SpecialistDoctor and Doctor
 class SeniorDoctor : public SpecialistDoctor {
 private:
     int experienceYears;
@@ -106,6 +114,7 @@ public:
     }
 };
 
+// DiagnosisManager class handles diagnosis setting for patients
 class DiagnosisManager {
 public:
     static void diagnosePatient(Patient &p, const Doctor &d, string diagnosis) {
@@ -114,6 +123,7 @@ public:
     }
 };
 
+// RoomInterface to allow substitutable room types
 class RoomInterface {
 public:
     virtual void admitPatient(Patient &p) = 0;
@@ -122,6 +132,7 @@ public:
     virtual ~RoomInterface() = default;
 };
 
+// Room class, substitutable for RoomInterface
 class Room : public RoomInterface {
 private:
     int roomNumber;
@@ -174,16 +185,16 @@ int main() {
     cout << "\nSimple Patient Display (name only):" << endl;
     sp1.display();
 
-    Room r1(101);
-    r1.admitPatient(p1);
-    r1.display();
+    unique_ptr<RoomInterface> r1 = make_unique<Room>(101); // Using RoomInterface type pointer
+    r1->admitPatient(p1);
+    r1->display();
 
-    SpecialistDoctor sd1("Dr. Specialist", 301, "Cardiology", "Pediatrics");
-    DiagnosisManager::diagnosePatient(p1, sd1, "Cold");
-    sd1.display();
+    unique_ptr<Doctor> sd1 = make_unique<SpecialistDoctor>("Dr. Specialist", 301, "Cardiology", "Pediatrics");
+    DiagnosisManager::diagnosePatient(p1, *sd1, "Cold");
+    sd1->display();
 
-    SeniorDoctor sr1("Dr. Senior", 401, "Cardiology", "Pediatrics", 20);
-    sr1.display();
+    unique_ptr<Doctor> sr1 = make_unique<SeniorDoctor>("Dr. Senior", 401, "Cardiology", "Pediatrics", 20);
+    sr1->display();
 
     Patient::displayTotalPatients();
     Doctor::displayTotalDoctors();
